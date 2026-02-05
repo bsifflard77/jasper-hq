@@ -10,7 +10,7 @@ import {
   Sparkles,
   Check
 } from 'lucide-react'
-import { createQuickNote } from '@/services/dashboardService'
+// Uses server-side API route instead of direct Supabase
 
 interface QuickNoteInputProps {
   onSubmit?: (content: string) => Promise<void>
@@ -39,7 +39,12 @@ export function QuickNoteInput({ onSubmit, placeholder = "Drop a note for Jasper
       if (onSubmit) {
         await onSubmit(content.trim())
       } else {
-        await createQuickNote(content.trim())
+        const res = await fetch('/api/notes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: content.trim() }),
+        })
+        if (!res.ok) throw new Error('Failed to save note')
       }
       setContent('')
       setShowSuccess(true)
