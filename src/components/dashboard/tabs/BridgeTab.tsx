@@ -1,8 +1,321 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { AgentCommandCenter } from '@/components/AgentCommandCenter'
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface BridgeTask {
+  id: string
+  title: string
+  project: string
+  projectName: string
+  agentEmoji: string
+  description: string
+  lastUpdated: string
+  lastUpdatedRelative: string
+  status: string
+  priority: string
+  started?: string
+  deadline?: string | null
+}
+
+interface StaleProject {
+  project: string
+  projectName: string
+  lastActivity: string | null
+  lastActivityRelative: string
+}
+
+interface ProjectStatusItem {
+  id: string
+  name: string
+  lastActivity: string | null
+  lastActivityRelative: string
+  taskCount: number
+  inProgressCount: number
+  doneCount: number
+  backlogCount: number
+  status: 'active' | 'stale' | 'idle' | 'unknown'
+}
+
+interface BridgeData {
+  needsBill: BridgeTask[]
+  inProgress: BridgeTask[]
+  completedRecently: BridgeTask[]
+  stale: StaleProject[]
+  projectStatus: ProjectStatusItem[]
+  lastUpdated: string | null
+  fetchedAt: string
+  error?: string
+}
+
+// ─── Task Card ─────────────────────────────────────────────────────────────────
+
+function TaskCard({ task, variant }: { task: BridgeTask; variant: 'needs-bill' | 'in-progress' | 'completed' }) {
+  const borderColor = variant === 'needs-bill'
+    ? 'border-red-500/30 bg-red-900/10'
+    : variant === 'in-progress'
+    ? 'border-amber-500/30 bg-amber-900/10'
+    : 'border-emerald-500/30 bg-emerald-900/10'
+
+  return (
+    <div className={`rounded-lg border p-3 ${borderColor}`}>
+      <div className="flex items-start justify-between gap-2 mb-1">
+        <span className="text-sm font-medium text-white leading-tight">{task.title}</span>
+        <span className="text-xs text-slate-500 whitespace-nowrap shrink-0">{task.lastUpdatedRelative}</span>
+      </div>
+      <div className="flex items-center gap-2 mb-1.5">
+        <span className="text-xs px-1.5 py-0.5 rounded bg-slate-700/60 text-slate-300">{task.projectName}</span>
+        <span className="text-sm">{task.agentEmoji}</span>
+        <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
+          task.priority === 'P1' ? 'bg-red-900/40 text-red-300' :
+          task.priority === 'P2' ? 'bg-amber-900/40 text-amber-300' :
+          'bg-slate-700/40 text-slate-400'
+        }`}>{task.priority}</span>
+      </div>
+      <p className="text-xs text-slate-400 line-clamp-2">{task.description}</p>
+    </div>
+  )
+}
+
+// ─── Section Card ─────────────────────────────────────────────────────────────
+
+function SectionCard({
+  emoji,
+  title,
+  count,
+  color,
+  children,
+  emptyMsg,
+}: {
+  emoji: string
+  title: string
+  count: number
+  color: 'red' | 'amber' | 'emerald' | 'orange'
+  children?: React.ReactNode
+  emptyMsg: string
+}) {
+  const headerColor = {
+    red: 'border-red-500/40 bg-red-900/20',
+    amber: 'border-amber-500/40 bg-amber-900/20',
+    emerald: 'border-emerald-500/40 bg-emerald-900/20',
+    orange: 'border-orange-500/40 bg-orange-900/20',
+  }[color]
+
+  const badgeColor = {
+    red: 'bg-red-900/40 text-red-300 border-red-500/30',
+    amber: 'bg-amber-900/40 text-amber-300 border-amber-500/30',
+    emerald: 'bg-emerald-900/40 text-emerald-300 border-emerald-500/30',
+    orange: 'bg-orange-900/40 text-orange-300 border-orange-500/30',
+  }[color]
+
+  return (
+    <div className={`rounded-xl border ${headerColor} flex flex-col`}>
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
+        <span className="text-lg">{emoji}</span>
+        <h4 className="font-semibold text-white text-sm">{title}</h4>
+        <Badge className={`ml-auto text-xs border ${badgeColor}`}>{count}</Badge>
+      </div>
+      <div className="p-3 space-y-2 flex-1 overflow-y-auto max-h-72">
+        {count === 0 ? (
+          <p className="text-xs text-slate-500 italic py-2 px-1">{emptyMsg}</p>
+        ) : children}
+      </div>
+    </div>
+  )
+}
+
+// ─── Captain's Bridge ─────────────────────────────────────────────────────────
+
+function CaptainsBridge() {
+  const [data, setData] = useState<BridgeData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [lastFetch, setLastFetch] = useState<Date | null>(null)
+
+  const fetchData = useCallback(async () => {
+    try {
+      const res = await fetch('/api/bridge/status')
+      const json = await res.json()
+      setData(json)
+      setLastFetch(new Date())
+    } catch (err) {
+      console.error('Bridge status fetch error:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchData()
+    const interval = setInterval(fetchData, 60000) // poll every 60s
+    return () => clearInterval(interval)
+  }, [fetchData])
+
+  const statusDotColor = {
+    active: 'bg-emerald-400',
+    idle: 'bg-amber-400',
+    stale: 'bg-red-400',
+    unknown: 'bg-slate-500',
+  }
+
+  const statusLabel = {
+    active: 'Active',
+    idle: 'Idle',
+    stale: 'Stale',
+    unknown: '–',
+  }
+
+  return (
+    <div className="space-y-5">
+      {/* Captain's Bridge Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">🧭</span>
+          <div>
+            <h3 className="text-xl font-bold text-white">Captain&apos;s Bridge</h3>
+            <p className="text-xs text-slate-400">Project Status Command Center</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {lastFetch && (
+            <span className="text-xs text-slate-500">
+              Updated {lastFetch.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+            </span>
+          )}
+          <button
+            onClick={fetchData}
+            className="text-xs text-slate-400 hover:text-white px-2 py-1 rounded border border-slate-700/50 hover:border-slate-500/50 transition"
+          >
+            🔄 Refresh
+          </button>
+        </div>
+      </div>
+
+      {/* Loading state */}
+      {loading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="flex items-center gap-3 text-slate-400">
+            <div className="w-5 h-5 border-2 border-amber-400/40 border-t-amber-400 rounded-full animate-spin" />
+            <span className="text-sm">Loading project status...</span>
+          </div>
+        </div>
+      )}
+
+      {!loading && data && (
+        <>
+          {/* 4-Section Status Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* 🔴 NEEDS BILL */}
+            <SectionCard
+              emoji="🔴"
+              title="NEEDS BILL"
+              count={data.needsBill.length}
+              color="red"
+              emptyMsg="Nothing needs your attention right now."
+            >
+              {data.needsBill.map(task => (
+                <TaskCard key={task.id} task={task} variant="needs-bill" />
+              ))}
+            </SectionCard>
+
+            {/* 🟡 IN PROGRESS */}
+            <SectionCard
+              emoji="🟡"
+              title="IN PROGRESS"
+              count={data.inProgress.length}
+              color="amber"
+              emptyMsg="No tasks currently in progress."
+            >
+              {data.inProgress.map(task => (
+                <TaskCard key={task.id} task={task} variant="in-progress" />
+              ))}
+            </SectionCard>
+
+            {/* 🟢 COMPLETED RECENTLY */}
+            <SectionCard
+              emoji="🟢"
+              title="COMPLETED RECENTLY"
+              count={data.completedRecently.length}
+              color="emerald"
+              emptyMsg="No tasks completed in the last 7 days."
+            >
+              {data.completedRecently.map(task => (
+                <TaskCard key={task.id} task={task} variant="completed" />
+              ))}
+            </SectionCard>
+
+            {/* ⚠️ STALE */}
+            <SectionCard
+              emoji="⚠️"
+              title="STALE PROJECTS"
+              count={data.stale.length}
+              color="orange"
+              emptyMsg="All projects have recent activity."
+            >
+              {data.stale.map(item => (
+                <div key={item.project} className="rounded-lg border border-orange-500/20 bg-orange-900/10 p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-white">{item.projectName}</span>
+                    <span className="text-xs text-slate-500">{item.lastActivityRelative}</span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">No activity for 5+ days</p>
+                </div>
+              ))}
+            </SectionCard>
+          </div>
+
+          {/* Per-Project Status Row */}
+          <div className="border border-slate-700/40 bg-slate-800/30 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-base">📊</span>
+              <h4 className="font-semibold text-white text-sm">All Projects</h4>
+              <span className="text-xs text-slate-500 ml-auto">
+                {data.projectStatus.filter(p => p.status === 'active').length} active ·{' '}
+                {data.projectStatus.filter(p => p.status === 'stale').length} stale
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+              {data.projectStatus.map(proj => (
+                <div
+                  key={proj.id}
+                  className={`rounded-lg border p-2.5 flex flex-col gap-1 ${
+                    proj.status === 'active' ? 'border-emerald-500/25 bg-emerald-900/10' :
+                    proj.status === 'stale' ? 'border-red-500/20 bg-red-900/5' :
+                    'border-slate-700/40 bg-slate-800/20'
+                  }`}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${statusDotColor[proj.status]}`} />
+                    <span className="text-xs font-medium text-white truncate">{proj.name}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-slate-500">{proj.lastActivityRelative}</span>
+                    {proj.inProgressCount > 0 && (
+                      <span className="text-[10px] text-amber-400">{proj.inProgressCount} active</span>
+                    )}
+                  </div>
+                  <span className={`text-[10px] font-medium ${
+                    proj.status === 'active' ? 'text-emerald-400' :
+                    proj.status === 'stale' ? 'text-red-400' :
+                    'text-slate-500'
+                  }`}>{statusLabel[proj.status]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {data.error && (
+            <div className="text-xs text-red-400 px-2">⚠️ {data.error}</div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
+// ─── Quick Actions ─────────────────────────────────────────────────────────────
 
 interface QuickAction {
   label: string
@@ -68,6 +381,8 @@ function QuickActionButton({ action }: { action: QuickAction }) {
   )
 }
 
+// ─── Cron Jobs & Models ────────────────────────────────────────────────────────
+
 interface CronJob {
   name: string
   schedule: string
@@ -128,6 +443,8 @@ function getStatusBadgeClass(status: string) {
   }
 }
 
+// ─── Main Export ──────────────────────────────────────────────────────────────
+
 export function BridgeTab() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [ollamaStatus, setOllamaStatus] = useState<'loading' | 'running' | 'down'>('loading')
@@ -138,7 +455,6 @@ export function BridgeTab() {
     return () => clearInterval(interval)
   }, [])
 
-  // Fetch Ollama status from security_status via dashboard API
   useEffect(() => {
     fetch('/api/security')
       .then(r => r.json())
@@ -154,7 +470,6 @@ export function BridgeTab() {
       .catch(() => setOllamaStatus('down'))
   }, [])
 
-  // Merge live status into model definitions
   const LOCAL_MODELS: LocalModel[] = LOCAL_MODELS_BASE.map(m => ({
     ...m,
     status: ollamaStatus === 'loading' ? 'idle'
@@ -168,14 +483,14 @@ export function BridgeTab() {
   const okCrons = CRON_JOBS.filter(j => j.status === 'ok').length
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <div className="space-y-8">
+      {/* ── Page Header ── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">🌉</span>
+          <span className="text-3xl">🧭</span>
           <div>
             <h2 className="text-2xl font-bold text-white">The Bridge</h2>
-            <p className="text-sm text-slate-400">Operations & Infrastructure Monitoring</p>
+            <p className="text-sm text-slate-400">Captain&apos;s Command Center · Operations & Status</p>
           </div>
         </div>
         <div className="flex items-center gap-4 text-sm">
@@ -189,7 +504,7 @@ export function BridgeTab() {
         </div>
       </div>
 
-      {/* Jasper — Primary Agent (Command & Control) */}
+      {/* ── Section 1: Agent Command Center ── */}
       <div className="border-2 border-emerald-500/50 bg-gradient-to-br from-slate-800/80 to-emerald-900/20 rounded-xl p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
@@ -221,10 +536,14 @@ export function BridgeTab() {
         </div>
       </div>
 
-      {/* The Squad — 5 Agents Reporting to Jasper */}
       <AgentCommandCenter />
 
-      {/* Local Fleet (On-Device Models) */}
+      {/* ── Section 2: Captain's Bridge — Project Status ── */}
+      <div className="border border-slate-700/40 bg-slate-800/20 rounded-xl p-6">
+        <CaptainsBridge />
+      </div>
+
+      {/* ── Section 3: Local Fleet ── */}
       <div className="border border-slate-700/50 bg-slate-800/30 rounded-xl p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-lg">🏠</span>
@@ -265,7 +584,7 @@ export function BridgeTab() {
         <p className="text-xs text-slate-600 mt-3">* Board of Directors (CSO/COO/CRO/CPO) are cloud-based — managed via the AI Board tab</p>
       </div>
 
-      {/* Infrastructure Overview */}
+      {/* ── Section 4: Infrastructure Overview ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Cron Jobs', value: `${okCrons + activeCrons}/${CRON_JOBS.length}`, sub: 'running OK', color: 'emerald' },
@@ -291,7 +610,7 @@ export function BridgeTab() {
         ))}
       </div>
 
-      {/* Quick Actions */}
+      {/* ── Section 5: Quick Actions ── */}
       <div className="border border-slate-700/50 bg-slate-800/30 rounded-xl p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-lg">⚡</span>
@@ -305,7 +624,7 @@ export function BridgeTab() {
         </div>
       </div>
 
-      {/* Cron Job Schedule */}
+      {/* ── Section 6: Automated Workflows ── */}
       <div className="border border-slate-700/50 bg-slate-800/50 backdrop-blur rounded-xl p-6">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-lg">⏰</span>
@@ -333,7 +652,6 @@ export function BridgeTab() {
           ))}
         </div>
       </div>
-
     </div>
   )
 }

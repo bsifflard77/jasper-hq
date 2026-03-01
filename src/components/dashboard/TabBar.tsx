@@ -11,7 +11,7 @@ export interface Tab {
 export const TABS: Tab[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
   { id: 'chat', label: 'Chat', icon: '🦞' },
-  { id: 'bridge', label: 'The Bridge', icon: '🌉' },
+  { id: 'bridge', label: 'Bridge', icon: '🧭' },
   { id: 'security', label: 'Security', icon: '🛡️' },
   { id: 'tasks', label: 'Tasks', icon: '📋' },
   { id: 'calendar', label: 'Calendar', icon: '📅' },
