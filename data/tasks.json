@@ -1,29 +1,7 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-02-25T13:00:00Z",
+  "lastUpdated": "2026-03-02T13:45:00Z",
   "tasks": [
-    {
-      "id": "task-011",
-      "title": "VortxxCore UI Overhaul — Layout v6",
-      "agent": ["dev"],
-      "project": "vortxx",
-      "priority": "P1",
-      "status": "done",
-      "created": "2026-02-24T20:00:00Z",
-      "completed": "2026-02-25T13:00:00Z",
-      "description": "6 deploys: New layout (Weather full / Quick Links + Passwords + Schedule Snapshot / News + Sports + Markets), removed Agent Dashboard sidebar tab, removed Email/Projects/Tools/Contacts from core, pre-loaded Quick Links, Today's Schedule Snapshot widget, compact scrollable News, Ask Jasper rename. Layout v6, commit 582b06f."
-    },
-    {
-      "id": "task-012",
-      "title": "Vortxx AI Email Evaluation + n8n Integration",
-      "agent": ["rigger", "dev"],
-      "project": "vortxx",
-      "priority": "P1",
-      "status": "backlog",
-      "created": "2026-02-25T13:00:00Z",
-      "deadline": null,
-      "description": "Spec out AI email classification (spam/junk/categorize) on incoming Gmail. Build n8n workflow: Gmail → Supabase → OpenAI eval → folder routing. Also fix email retention bug and Gmail labels/folders linking in UI. Full spec to come from 1 PM strategy session Feb 25."
-    },
     {
       "id": "task-001",
       "title": "Build thefortnh.com — Full Website Redesign",
@@ -34,8 +12,54 @@
       "created": "2026-02-23T00:00:00Z",
       "started": "2026-02-24T12:00:00Z",
       "deadline": "2026-03-01T00:00:00Z",
-      "description": "Anchor produces copy + UX brief. Forge builds site. Mobile-first, 3 tiers, Mindbody, Molly PT section, trial CTA.",
+      "needs_bill": true,
+      "description": "DEADLINE PASSED (Mar 1). Site may be ready — Bill needs to review and give go/no-go for launch. Anchor produced copy + UX brief. Forge built site. Mobile-first, 3 tiers, Mindbody, Molly PT section, trial CTA.",
       "subagentSession": "agent:beacon:subagent:1f2b5b98-5cfa-4802-9672-5faf7679f428"
+    },
+    {
+      "id": "task-013",
+      "title": "Run Agent Tasks SQL Migration in Supabase",
+      "agent": ["jasper"],
+      "project": "jasper-hq",
+      "priority": "P1",
+      "status": "backlog",
+      "created": "2026-03-02T13:45:00Z",
+      "needs_bill": true,
+      "description": "File is ready: D:\\Jasper\\clawd\\notes\\agent-tasks-migration.sql. Open Supabase SQL console → paste → run. Unlocks real-time agent card updates on the Bridge tab. Takes 2 min."
+    },
+    {
+      "id": "task-014",
+      "title": "Install 8 Pending Windows Updates",
+      "agent": ["jasper"],
+      "project": "jasper-hq",
+      "priority": "P2",
+      "status": "backlog",
+      "created": "2026-03-02T13:45:00Z",
+      "needs_bill": true,
+      "description": "8 patches flagged in Saturday's security review. Settings → Windows Update → Install All. ~15-30 min. Cannot be done remotely."
+    },
+    {
+      "id": "task-015",
+      "title": "Test Jasper Chat Speed — Still Lagging?",
+      "agent": ["jasper"],
+      "project": "jasper-hq",
+      "priority": "P2",
+      "status": "backlog",
+      "created": "2026-03-02T13:45:00Z",
+      "needs_bill": true,
+      "description": "Open jasper-hq.vercel.app/chat, send a test message, report back. Was ~10s lag before. Needs a human to test and confirm before we build the direct API fix."
+    },
+    {
+      "id": "task-003",
+      "title": "Build GiftHQ n8n Content Pipeline",
+      "agent": ["rigger"],
+      "project": "gifthq",
+      "priority": "P1",
+      "status": "backlog",
+      "created": "2026-02-23T00:00:00Z",
+      "deadline": "2026-04-14T00:00:00Z",
+      "needs_bill": true,
+      "description": "GREEN LIGHT NEEDED — Mother's Day is May 10, Amazon campaign window closes ~Apr 14. Amazon PA API → OpenAI → ElevenLabs → Shotstack → YouTube/Pinterest/TikTok/Instagram/X. Rigger is ready to start immediately. Say go."
     },
     {
       "id": "task-002",
@@ -49,17 +73,6 @@
       "description": "Replace cron-polled chat with direct OpenAI API call in /api/chat/send. Target 3-4s response. Trigger Vercel deploy hook after push."
     },
     {
-      "id": "task-003",
-      "title": "Build GiftHQ n8n Content Pipeline",
-      "agent": ["rigger"],
-      "project": "gifthq",
-      "priority": "P1",
-      "status": "backlog",
-      "created": "2026-02-23T00:00:00Z",
-      "deadline": "2026-04-14T00:00:00Z",
-      "description": "Amazon PA API → OpenAI → ElevenLabs → Shotstack → YouTube/Pinterest/TikTok/Instagram/X. Phase 1: wire social accounts + Buffer shortcut."
-    },
-    {
       "id": "task-004",
       "title": "Vortxx Full Codebase Audit",
       "agent": ["dev"],
@@ -69,6 +82,17 @@
       "created": "2026-02-23T00:00:00Z",
       "deadline": null,
       "description": "Review full codebase, console errors, broken routes, Supabase schema. Output: vortxx-audit-{date}.md with severity ratings."
+    },
+    {
+      "id": "task-012",
+      "title": "Vortxx AI Email Evaluation + n8n Integration",
+      "agent": ["rigger", "dev"],
+      "project": "vortxx",
+      "priority": "P1",
+      "status": "backlog",
+      "created": "2026-02-25T13:00:00Z",
+      "deadline": null,
+      "description": "AI email classification (spam/junk/categorize) on incoming Gmail. Build n8n workflow: Gmail → Supabase → OpenAI eval → folder routing. Fix email retention bug and Gmail labels/folders linking in UI."
     },
     {
       "id": "task-005",
@@ -135,6 +159,39 @@
       "created": "2026-02-23T00:00:00Z",
       "deadline": null,
       "description": "Build /blog on openclawhq.ai. Populate with 3-5 SEO posts about AI agent systems."
+    },
+    {
+      "id": "task-011",
+      "title": "VortxxCore UI Overhaul — Layout v6",
+      "agent": ["dev"],
+      "project": "vortxx",
+      "priority": "P1",
+      "status": "done",
+      "created": "2026-02-24T20:00:00Z",
+      "completed": "2026-02-25T13:00:00Z",
+      "description": "6 deploys: New layout (Weather full / Quick Links + Passwords + Schedule Snapshot / News + Sports + Markets), removed Agent Dashboard sidebar tab, removed Email/Projects/Tools/Contacts from core, pre-loaded Quick Links, Today's Schedule Snapshot widget, compact scrollable News, Ask Jasper rename. Layout v6, commit 582b06f."
+    },
+    {
+      "id": "task-016",
+      "title": "Jasper HQ Bridge Tab — Agent Squad Cards",
+      "agent": ["dev"],
+      "project": "jasper-hq",
+      "priority": "P1",
+      "status": "done",
+      "created": "2026-03-01T00:00:00Z",
+      "completed": "2026-03-01T20:00:00Z",
+      "description": "Agent squad cards, sticky header, full nav reorder, Security tab parser fix, BitLocker + Ollama live. Captain's Bridge 4-section layout complete."
+    },
+    {
+      "id": "task-017",
+      "title": "Discord Full Two-Way Access + #daily-priorities Channel",
+      "agent": ["jasper"],
+      "project": "jasper-hq",
+      "priority": "P1",
+      "status": "done",
+      "created": "2026-03-01T00:00:00Z",
+      "completed": "2026-03-01T22:00:00Z",
+      "description": "All 24 Monomoy Strategies channels now two-way. Bot has Administrator role. #daily-priorities created for 6:30 AM Captain's Bridge briefing. Cron scheduled."
     }
   ]
 }
