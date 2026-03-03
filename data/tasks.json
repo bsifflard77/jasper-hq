@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-03-02T13:45:00Z",
+  "lastUpdated": "2026-03-03T11:53:00Z",
   "tasks": [
     {
       "id": "task-001",
@@ -11,9 +11,8 @@
       "status": "in-progress",
       "created": "2026-02-23T00:00:00Z",
       "started": "2026-02-24T12:00:00Z",
-      "deadline": "2026-03-01T00:00:00Z",
-      "needs_bill": true,
-      "description": "DEADLINE PASSED (Mar 1). Site may be ready — Bill needs to review and give go/no-go for launch. Anchor produced copy + UX brief. Forge built site. Mobile-first, 3 tiers, Mindbody, Molly PT section, trial CTA.",
+      "deadline": "2026-04-01T00:00:00Z",
+      "description": "Launch pushed to April. Anchor produced copy + UX brief. Forge built site. Mobile-first, 3 tiers, Mindbody, Molly PT section, trial CTA.",
       "subagentSession": "agent:beacon:subagent:1f2b5b98-5cfa-4802-9672-5faf7679f428"
     },
     {
@@ -22,10 +21,10 @@
       "agent": ["jasper"],
       "project": "jasper-hq",
       "priority": "P1",
-      "status": "backlog",
+      "status": "done",
       "created": "2026-03-02T13:45:00Z",
-      "needs_bill": true,
-      "description": "File is ready: D:\\Jasper\\clawd\\notes\\agent-tasks-migration.sql. Open Supabase SQL console → paste → run. Unlocks real-time agent card updates on the Bridge tab. Takes 2 min."
+      "completed": "2026-03-03T11:53:00Z",
+      "description": "SQL migration run by Bill Mar 3. Real-time agent card updates now unlocked on Bridge tab."
     },
     {
       "id": "task-014",
@@ -33,10 +32,10 @@
       "agent": ["jasper"],
       "project": "jasper-hq",
       "priority": "P2",
-      "status": "backlog",
+      "status": "done",
       "created": "2026-03-02T13:45:00Z",
-      "needs_bill": true,
-      "description": "8 patches flagged in Saturday's security review. Settings → Windows Update → Install All. ~15-30 min. Cannot be done remotely."
+      "completed": "2026-03-03T11:53:00Z",
+      "description": "8 patches installed by Bill Mar 3. Monomoy-1 fully patched."
     },
     {
       "id": "task-015",
@@ -44,10 +43,10 @@
       "agent": ["jasper"],
       "project": "jasper-hq",
       "priority": "P2",
-      "status": "backlog",
+      "status": "done",
       "created": "2026-03-02T13:45:00Z",
-      "needs_bill": true,
-      "description": "Open jasper-hq.vercel.app/chat, send a test message, report back. Was ~10s lag before. Needs a human to test and confirm before we build the direct API fix."
+      "completed": "2026-03-03T11:53:00Z",
+      "description": "Speed test completed by Bill Mar 3. Next: Forge to build direct API call fix (task-002) based on findings."
     },
     {
       "id": "task-003",
