@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-03-03T11:53:00Z",
+  "lastUpdated": "2026-03-04T11:37:00Z",
   "tasks": [
     {
       "id": "task-001",
@@ -50,15 +50,15 @@
     },
     {
       "id": "task-003",
-      "title": "Build GiftHQ n8n Content Pipeline",
+      "title": "GHQ-001: Mother's Day Affiliate Content Pipeline",
       "agent": ["rigger"],
       "project": "gifthq",
       "priority": "P1",
-      "status": "backlog",
+      "status": "in-progress",
       "created": "2026-02-23T00:00:00Z",
+      "started": "2026-03-04T11:37:00Z",
       "deadline": "2026-04-14T00:00:00Z",
-      "needs_bill": true,
-      "description": "GREEN LIGHT NEEDED — Mother's Day is May 10, Amazon campaign window closes ~Apr 14. Amazon PA API → OpenAI → ElevenLabs → Shotstack → YouTube/Pinterest/TikTok/Instagram/X. Rigger is ready to start immediately. Say go."
+      "description": "GREEN LIT Mar 4. Rigger building: Amazon PA API → OpenAI → ElevenLabs → Shotstack → YouTube/Pinterest/TikTok/Instagram/X. All updates in #gifthq. Bill still needs to create: Pinterest account, YouTube channel, Instagram account, Shotstack API key."
     },
     {
       "id": "task-002",
