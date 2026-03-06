@@ -335,7 +335,7 @@ export default function MindMapMode() {
           <p className="text-lg font-medium text-slate-500">Enter a project or topic above</p>
           <p className="text-sm mt-1">Jasper will generate a visual mind map instantly</p>
           <div className="mt-6 grid grid-cols-3 gap-3 text-xs">
-            {['GiftHQ', 'The Helm Method™', 'Q2 Marketing Plan', 'The Fort Strategy', 'Vortxx Features', 'AIDEN Product'].map(s => (
+            {['GiftHQ', 'The Helm Method™', 'TVE Book', 'The Fort Strategy', 'Vortxx Features', 'AIDEN Product'].map(s => (
               <button
                 key={s}
                 onClick={() => setPrompt(s)}
