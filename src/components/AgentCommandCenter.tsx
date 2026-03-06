@@ -339,34 +339,46 @@ export function AgentCommandCenter() {
 
   return (
     <div className="border border-slate-700/50 bg-slate-800/40 backdrop-blur rounded-lg p-5">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/agents/jasper-room.png" alt="Jasper" className="w-10 h-10 rounded-lg object-cover border border-emerald-500/40" style={{ imageRendering: 'pixelated' }} />
+      {/* Conference Room Banner */}
+      <div className="relative w-full rounded-lg overflow-hidden mb-5 border border-slate-600/50" style={{ maxHeight: '220px' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/agents/conference-room.png"
+          alt="Conference Room"
+          className="w-full object-cover object-center"
+          style={{ maxHeight: '220px', imageRendering: 'pixelated' }}
+        />
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/30 to-transparent" />
+        {/* Bottom label */}
+        <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-end justify-between">
           <div>
-            <h3 className="text-lg font-bold text-white">AGENT COMMAND CENTER</h3>
-            <p className="text-xs text-slate-500">Monomoy Strategies — Mission Control</p>
+            <p className="text-[9px] font-bold tracking-widest text-emerald-400 uppercase mb-0.5">Monomoy Strategies</p>
+            <h3 className="text-base font-bold text-white">AGENT COMMAND CENTER</h3>
+            <p className="text-[10px] text-slate-400">Mission Control · All hands</p>
           </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Summary pills */}
-          {runningCount > 0 && (
-            <span className="text-[10px] px-2 py-1 rounded-full bg-yellow-900/30 text-yellow-300 border border-yellow-500/30">
-              {runningCount} running
-            </span>
-          )}
-          {blockedCount > 0 && (
-            <span className="text-[10px] px-2 py-1 rounded-full bg-red-900/30 text-red-300 border border-red-500/30">
-              {blockedCount} blocked
-            </span>
-          )}
-
-          {/* Live indicator */}
-          <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
-            <span className={`w-2 h-2 rounded-full transition-all duration-300 ${live ? 'bg-emerald-400' : 'bg-slate-600'}`} />
-            {tasks.length > 0 ? 'Live' : 'Static'} · {lastUpdated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+          <div className="flex flex-col items-end gap-1.5">
+            <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 text-[10px] text-slate-300 bg-slate-900/70 px-2 py-1 rounded-full border border-slate-600/50">
+                <span className={`w-2 h-2 rounded-full transition-all duration-300 ${live ? 'bg-emerald-400 animate-pulse' : 'bg-slate-600'}`} />
+                {tasks.length > 0 ? 'Live DB' : 'Static'} · {lastUpdated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {runningCount > 0 && (
+                <span className="text-[10px] px-2 py-1 rounded-full bg-yellow-900/60 text-yellow-300 border border-yellow-500/40">
+                  {runningCount} running
+                </span>
+              )}
+              {blockedCount > 0 && (
+                <span className="text-[10px] px-2 py-1 rounded-full bg-red-900/60 text-red-300 border border-red-500/40">
+                  {blockedCount} blocked
+                </span>
+              )}
+              <span className="text-[10px] px-2 py-1 rounded-full bg-slate-800/70 text-slate-400 border border-slate-600/40">
+                📅 Tue 10AM
+              </span>
+            </div>
           </div>
         </div>
       </div>
