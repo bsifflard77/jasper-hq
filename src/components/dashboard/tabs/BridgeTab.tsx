@@ -508,7 +508,8 @@ export function BridgeTab() {
       <div className="border-2 border-emerald-500/50 bg-gradient-to-br from-slate-800/80 to-emerald-900/20 rounded-xl p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
-            <div className="text-5xl">🦞</div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/agents/jasper-avatar.png" alt="Jasper" className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500/60 shadow-lg shadow-emerald-500/20" />
             <div>
               <div className="flex items-center gap-3">
                 <h3 className="text-2xl font-bold text-white">Jasper Fidelis Monomoy</h3>
