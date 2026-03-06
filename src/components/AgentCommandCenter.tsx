@@ -364,18 +364,18 @@ export function AgentCommandCenter() {
 
       {/* 6-card grid: Jasper (conference room) + 5 agents — all same size */}
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
-        {/* Jasper card — conference room */}
+        {/* Jasper card — avatar */}
         <div
           className="rounded-lg border border-emerald-500/50 bg-emerald-950/20 flex flex-col overflow-hidden shadow-lg transition-all duration-200 hover:scale-[1.02]"
           style={{ boxShadow: '0 0 18px 1px #10b98122' }}
         >
           <div className="flex items-center justify-between px-2.5 py-1.5 bg-slate-900/60 border-b border-slate-700/50">
-            <span className="text-[9px] font-bold tracking-widest text-slate-400 uppercase">THE BRIDGE</span>
+            <span className="text-[9px] font-bold tracking-widest text-slate-400 uppercase">ORCHESTRATOR</span>
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           </div>
           <div className="relative w-full aspect-square overflow-hidden bg-slate-950">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/agents/conference-room.png" alt="Jasper HQ Conference Room" className="w-full h-full object-cover" />
+            <img src="/agents/jasper-avatar.png" alt="Jasper" className="w-full h-full object-cover object-center" />
             <div className="absolute top-2 right-2">
               <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500 text-white">[CMD]</span>
             </div>
