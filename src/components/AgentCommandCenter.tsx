@@ -11,11 +11,15 @@ interface AgentDef {
   emoji: string
   role: string
   title: string
+  roomLabel: string
+  roomImage: string
   owns: string[]
   color: string
   borderColor: string
+  borderColorHex: string
   textColor: string
   bgColor: string
+  glowColor: string
 }
 
 const AGENTS: AgentDef[] = [
@@ -25,11 +29,15 @@ const AGENTS: AgentDef[] = [
     emoji: '📡',
     role: 'Content Creation',
     title: 'Content & Brand Strategist',
+    roomLabel: 'CONTENT STUDIO',
+    roomImage: '/agents/beacon-room.png',
     owns: ['Blog & social content', 'Newsletter drafts', 'TVE & Monomoy copy'],
     color: 'amber',
-    borderColor: 'border-amber-500/40',
+    borderColor: 'border-amber-500/50',
+    borderColorHex: '#f59e0b',
     textColor: 'text-amber-300',
-    bgColor: 'bg-amber-900/20',
+    bgColor: 'bg-amber-950/30',
+    glowColor: 'shadow-amber-500/20',
   },
   {
     id: 'navigator',
@@ -37,11 +45,15 @@ const AGENTS: AgentDef[] = [
     emoji: '🔭',
     role: 'Research & Intel',
     title: 'Research & Intelligence Lead',
+    roomLabel: 'RESEARCH LAB',
+    roomImage: '/agents/navigator-room.png',
     owns: ['Market research', 'Competitor analysis', 'Daily intel briefings'],
     color: 'blue',
-    borderColor: 'border-blue-500/40',
+    borderColor: 'border-blue-500/50',
+    borderColorHex: '#3b82f6',
     textColor: 'text-blue-300',
-    bgColor: 'bg-blue-900/20',
+    bgColor: 'bg-blue-950/30',
+    glowColor: 'shadow-blue-500/20',
   },
   {
     id: 'rigger',
@@ -49,11 +61,15 @@ const AGENTS: AgentDef[] = [
     emoji: '⚙️',
     role: 'Automation & n8n',
     title: 'Automation & Infrastructure Engineer',
+    roomLabel: 'ENGINE ROOM',
+    roomImage: '/agents/rigger-room.png',
     owns: ['n8n workflow pipelines', 'GiftHQ social pipeline', 'Integration & sync jobs'],
     color: 'orange',
-    borderColor: 'border-orange-500/40',
+    borderColor: 'border-orange-500/50',
+    borderColorHex: '#f97316',
     textColor: 'text-orange-300',
-    bgColor: 'bg-orange-900/20',
+    bgColor: 'bg-orange-950/30',
+    glowColor: 'shadow-orange-500/20',
   },
   {
     id: 'dev',
@@ -61,11 +77,15 @@ const AGENTS: AgentDef[] = [
     emoji: '💻',
     role: 'Development',
     title: 'Lead Developer',
+    roomLabel: 'DEV CAVE',
+    roomImage: '/agents/forge-room.png',
     owns: ['Jasper HQ', 'Vortxx', 'YTidy', 'GiftHQ', 'All code & deploys'],
     color: 'emerald',
-    borderColor: 'border-emerald-500/40',
+    borderColor: 'border-emerald-500/50',
+    borderColorHex: '#10b981',
     textColor: 'text-emerald-300',
-    bgColor: 'bg-emerald-900/20',
+    bgColor: 'bg-emerald-950/30',
+    glowColor: 'shadow-emerald-500/20',
   },
   {
     id: 'fort',
@@ -73,11 +93,15 @@ const AGENTS: AgentDef[] = [
     emoji: '🏰',
     role: 'The Fort Strategy',
     title: 'Fort Marketing & Strategy Lead',
+    roomLabel: 'STRATEGY HQ',
+    roomImage: '/agents/anchor-room.png',
     owns: ['Fort marketing plans', 'Performance Therapy growth', 'Membership & pricing'],
     color: 'purple',
-    borderColor: 'border-purple-500/40',
+    borderColor: 'border-purple-500/50',
+    borderColorHex: '#a855f7',
     textColor: 'text-purple-300',
-    bgColor: 'bg-purple-900/20',
+    bgColor: 'bg-purple-950/30',
+    glowColor: 'shadow-purple-500/20',
   },
 ]
 
@@ -191,54 +215,62 @@ function AgentCard({
   const statusInfo = STATUS_CONFIG[status]
 
   return (
-    <div className={`rounded-lg border ${agent.borderColor} ${agent.bgColor} p-4 flex flex-col gap-3`}>
-      {/* Header — name + status */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">{agent.emoji}</span>
-          <div>
-            <p className={`text-sm font-bold ${agent.textColor}`}>{agent.name}</p>
-            <p className="text-[11px] text-slate-400">{agent.title}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5 shrink-0">
+    <div
+      className={`rounded-lg border ${agent.borderColor} ${agent.bgColor} flex flex-col overflow-hidden shadow-lg ${agent.glowColor} transition-all duration-200 hover:scale-[1.02] hover:shadow-xl`}
+      style={{ boxShadow: `0 0 18px 1px ${agent.borderColorHex}22` }}
+    >
+      {/* Room label bar */}
+      <div className="flex items-center justify-between px-2.5 py-1.5 bg-slate-900/60 border-b border-slate-700/50">
+        <span className="text-[9px] font-bold tracking-widest text-slate-400 uppercase">{agent.roomLabel}</span>
+        <div className="flex items-center gap-1.5">
           <span className={`w-2 h-2 rounded-full ${statusInfo.dotColor} ${status === 'active' ? 'animate-pulse' : ''}`} />
-          <span className={`text-[10px] font-semibold ${agent.textColor}`}>{statusInfo.label}</span>
         </div>
       </div>
 
-      {/* Responsibilities */}
-      <div>
-        <p className="text-[10px] text-slate-500 uppercase tracking-wide mb-1.5 font-medium">Owns</p>
-        <ul className="space-y-0.5">
-          {agent.owns.map((item) => (
-            <li key={item} className="text-[11px] text-slate-300 flex items-start gap-1.5">
-              <span className={`mt-0.5 w-1 h-1 rounded-full bg-current ${agent.textColor} shrink-0`} />
-              {item}
-            </li>
-          ))}
-        </ul>
+      {/* Pixel art room image */}
+      <div className="relative w-full aspect-square overflow-hidden bg-slate-950">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={agent.roomImage}
+          alt={`${agent.name} room`}
+          className="w-full h-full object-cover"
+          style={{ imageRendering: 'pixelated' }}
+        />
+        {/* Status overlay badge */}
+        <div className="absolute top-2 right-2">
+          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+            status === 'active'  ? 'bg-yellow-400 text-yellow-950' :
+            status === 'queued'  ? 'bg-blue-500 text-white' :
+            status === 'blocked' ? 'bg-red-500 text-white' :
+            'bg-slate-600 text-slate-200'
+          }`}>
+            [{statusInfo.label}]
+          </span>
+        </div>
       </div>
 
-      {/* Current assignment */}
-      <div className="border-t border-slate-700/40 pt-2.5 flex-1">
-        <p className="text-[10px] text-slate-500 uppercase tracking-wide mb-1 font-medium">
-          {status === 'active' ? '▶ Running' : status === 'queued' ? '⏳ Up Next' : 'Assignment'}
-        </p>
+      {/* Agent name + task */}
+      <div className="p-3 flex flex-col gap-2 flex-1 bg-slate-900/40">
+        <div className="flex items-center gap-1.5">
+          <span className="text-base">{agent.emoji}</span>
+          <span className={`text-xs font-bold tracking-wide ${agent.textColor}`}>{agent.name}</span>
+        </div>
+
+        {/* Current task */}
         {currentTask ? (
           <div className="space-y-1">
-            <p className="text-xs text-white font-medium leading-snug line-clamp-2">{currentTask.task}</p>
-            <div className="flex items-center gap-2 mt-1">
+            <p className="text-[10px] text-slate-300 leading-snug line-clamp-2">{currentTask.task}</p>
+            <div className="flex items-center gap-1.5">
               {currentTask.project && (
-                <span className="text-[10px] text-slate-500 truncate">{currentTask.project}</span>
+                <span className="text-[9px] text-slate-500 truncate">{currentTask.project}</span>
               )}
-              <span className={`text-[9px] px-1.5 py-0.5 rounded border shrink-0 ${PRIORITY_BADGE[currentTask.priority]}`}>
+              <span className={`text-[8px] px-1 py-0.5 rounded border shrink-0 ml-auto ${PRIORITY_BADGE[currentTask.priority]}`}>
                 {currentTask.priority}
               </span>
             </div>
           </div>
         ) : (
-          <p className="text-[11px] text-slate-500 italic">Available — awaiting task</p>
+          <p className="text-[10px] text-slate-600 italic">Available</p>
         )}
       </div>
     </div>
@@ -310,7 +342,8 @@ export function AgentCommandCenter() {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <span className="text-xl">🤖</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/agents/jasper-room.png" alt="Jasper" className="w-10 h-10 rounded-lg object-cover border border-emerald-500/40" style={{ imageRendering: 'pixelated' }} />
           <div>
             <h3 className="text-lg font-bold text-white">AGENT COMMAND CENTER</h3>
             <p className="text-xs text-slate-500">Monomoy Strategies — Mission Control</p>
