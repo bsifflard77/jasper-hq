@@ -1,6 +1,6 @@
 'use client'
 
-export type TabId = 'dashboard' | 'security' | 'tasks' | 'projects' | 'ai-board' | 'bridge' | 'canvas' | 'costs' | 'apis' | 'marketing' | 'fort' | 'calendar' | 'ideas' | 'chat'
+export type TabId = 'dashboard' | 'security' | 'tasks' | 'projects' | 'ai-board' | 'bridge' | 'canvas' | 'costs' | 'apis' | 'credentials' | 'marketing' | 'fort' | 'calendar' | 'ideas' | 'chat'
 
 export interface Tab {
   id: TabId
@@ -22,6 +22,7 @@ export const TABS: Tab[] = [
   { id: 'marketing', label: 'Marketing', icon: '📈' },
   { id: 'costs', label: 'Costs', icon: '💰' },
   { id: 'apis', label: 'APIs', icon: '🔌' },
+  { id: 'credentials', label: 'Credentials', icon: '🔐' },
   { id: 'fort', label: 'The Fort', icon: '💪' },
 ]
 
@@ -41,7 +42,7 @@ export function TabBar({ activeTab, onTabChange }: TabBarProps) {
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium whitespace-nowrap rounded-md transition-all duration-150"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium whitespace-nowrap rounded-md transition-all duration-150"
             style={
               activeTab === tab.id
                 ? {

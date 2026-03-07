@@ -101,12 +101,10 @@ const ACCENT_VALUE: Record<string, string> = {
 function MetricCard({ label, value, sub, accent = 'emerald' }: { label: string; value: string; sub?: string; accent?: string }) {
   const accentHex = ACCENT_VALUE[accent] ?? ACCENT_VALUE.emerald
   return (
-    <div
-      className="relative rounded-lg p-3 flex flex-col gap-1 overflow-hidden jhq-card scanline-card"
-    >
-      <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: 'var(--jhq-text3)' }}>{label}</span>
-      <span className="text-xl font-bold font-mono" style={{ color: accentHex }}>{value}</span>
-      {sub && <span className="text-[10px]" style={{ color: 'var(--jhq-text3)' }}>{sub}</span>}
+    <div className="relative rounded-lg p-4 flex flex-col gap-1.5 overflow-hidden jhq-card scanline-card">
+      <span className="text-xs font-mono tracking-widest uppercase font-semibold" style={{ color: 'var(--jhq-text3)' }}>{label}</span>
+      <span className="text-2xl font-bold font-mono" style={{ color: accentHex }}>{value}</span>
+      {sub && <span className="text-xs" style={{ color: 'var(--jhq-text3)' }}>{sub}</span>}
     </div>
   )
 }
@@ -130,9 +128,9 @@ function TaskItem({ task }: { task: AgentTask }) {
     }`}>
       <span className={`mt-0.5 w-2 h-2 rounded-full shrink-0 ${priorityColor[task.priority] ?? 'bg-slate-500'}`} />
       <div className="flex-1 min-w-0">
-        <p className={`text-xs leading-snug truncate ${task.status === 'completed' ? 'text-slate-600 line-through' : 'text-slate-200'}`}>{task.title}</p>
+        <p className={`text-sm leading-snug truncate ${task.status === 'completed' ? 'line-through' : ''}`} style={{ color: task.status === 'completed' ? 'var(--jhq-text3)' : 'var(--jhq-text)' }}>{task.title}</p>
         {task.agent && (
-          <span className="text-[9px] text-slate-600">{agentEmoji[task.agent] ?? '🤖'} {task.agent}</span>
+          <span className="text-xs" style={{ color: 'var(--jhq-text3)' }}>{agentEmoji[task.agent] ?? '🤖'} {task.agent}</span>
         )}
       </div>
       <span className={`text-[11px] shrink-0 ${task.status === 'in_progress' ? 'text-emerald-400' : task.status === 'blocked' ? 'text-red-400' : 'text-slate-600'}`}>
@@ -243,7 +241,7 @@ export function DashboardTab() {
           <div className="col-span-4 space-y-3">
             <div className="flex items-center gap-2 mb-4">
               <div className="h-px flex-1 bg-gradient-to-r from-emerald-500/50 to-transparent" />
-              <span className="text-[10px] font-mono tracking-widest text-emerald-500 uppercase">System Status</span>
+              <span className="text-xs font-mono tracking-widest text-emerald-500 uppercase font-bold">System Status</span>
               <div className="h-px flex-1 bg-gradient-to-l from-emerald-500/50 to-transparent" />
             </div>
 
@@ -277,24 +275,24 @@ export function DashboardTab() {
               <ScanLine />
               <div className="flex items-center gap-2">
                 <div className="h-px flex-1 bg-gradient-to-r from-amber-500/40 to-transparent" />
-                <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase">LLM Usage</span>
+                <span className="text-xs font-mono tracking-widest text-amber-500 uppercase font-bold">LLM Usage</span>
                 <div className="h-px flex-1 bg-gradient-to-l from-amber-500/40 to-transparent" />
               </div>
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div>
-                  <p className="text-[9px] text-slate-600 uppercase tracking-wider">Today</p>
-                  <p className="text-sm font-bold font-mono text-white">{usage ? fmtTokens(usage.today.tokens) : '—'}</p>
-                  <p className="text-[9px] text-slate-600">tokens</p>
+                  <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--jhq-text3)' }}>Today</p>
+                  <p className="text-base font-bold font-mono text-white">{usage ? fmtTokens(usage.today.tokens) : '—'}</p>
+                  <p className="text-xs" style={{ color: 'var(--jhq-text3)' }}>tokens</p>
                 </div>
                 <div>
-                  <p className="text-[9px] text-slate-600 uppercase tracking-wider">Month</p>
-                  <p className="text-sm font-bold font-mono text-amber-300">{usage ? fmtTokens(usage.month.tokens) : '—'}</p>
-                  <p className="text-[9px] text-slate-600">tokens</p>
+                  <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--jhq-text3)' }}>Month</p>
+                  <p className="text-base font-bold font-mono text-amber-300">{usage ? fmtTokens(usage.month.tokens) : '—'}</p>
+                  <p className="text-xs" style={{ color: 'var(--jhq-text3)' }}>tokens</p>
                 </div>
                 <div>
-                  <p className="text-[9px] text-slate-600 uppercase tracking-wider">Est. Cost</p>
-                  <p className="text-sm font-bold font-mono text-emerald-300">{usage ? fmtCost(usage.month.cost) : '—'}</p>
-                  <p className="text-[9px] text-slate-600">this month</p>
+                  <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--jhq-text3)' }}>Est. Cost</p>
+                  <p className="text-base font-bold font-mono text-emerald-300">{usage ? fmtCost(usage.month.cost) : '—'}</p>
+                  <p className="text-xs" style={{ color: 'var(--jhq-text3)' }}>this month</p>
                 </div>
               </div>
             </div>
@@ -303,8 +301,8 @@ export function DashboardTab() {
           {/* CENTER: Orb + Identity */}
           <div className="col-span-4 flex flex-col items-center justify-center gap-4 py-4">
             <div className="text-center space-y-1 mb-2">
-              <p className="text-[10px] font-mono tracking-[0.3em] text-emerald-500 uppercase">{getGreeting()},</p>
-              <p className="text-2xl font-bold text-white tracking-wide">Bill</p>
+              <p className="text-sm font-mono tracking-[0.25em] text-emerald-500 uppercase">{getGreeting()},</p>
+              <p className="text-3xl font-bold text-white tracking-wide">Bill</p>
             </div>
 
             {/* 3D Orb */}
@@ -318,14 +316,14 @@ export function DashboardTab() {
             </div>
 
             <div className="text-center space-y-1 mt-2">
-              <p className="text-base font-bold text-white tracking-widest font-mono">JASPER</p>
-              <p className="text-[10px] text-slate-500 tracking-[0.2em] font-mono">FIDELIS MONOMOY</p>
+              <p className="text-lg font-bold text-white tracking-widest font-mono">JASPER</p>
+              <p className="text-sm tracking-[0.2em] font-mono" style={{ color: 'var(--jhq-text3)' }}>FIDELIS MONOMOY</p>
               <div className="flex items-center justify-center gap-2 mt-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[10px] font-mono text-emerald-400 tracking-widest">CORE SYSTEM ACTIVE</span>
+                <span className="text-xs font-mono text-emerald-400 tracking-widest">CORE SYSTEM ACTIVE</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               </div>
-              <p className="text-[9px] text-slate-600 font-mono mt-1">JASPER OS v3.0 · MONOMOY STRATEGIES</p>
+              <p className="text-xs font-mono mt-1" style={{ color: 'var(--jhq-text3)' }}>JASPER OS v3.0 · MONOMOY STRATEGIES</p>
             </div>
           </div>
 
@@ -333,7 +331,7 @@ export function DashboardTab() {
           <div className="col-span-4 space-y-3">
             <div className="flex items-center gap-2 mb-4">
               <div className="h-px flex-1 bg-gradient-to-r from-emerald-500/50 to-transparent" />
-              <span className="text-[10px] font-mono tracking-widest text-emerald-500 uppercase">Today&apos;s Tasks</span>
+              <span className="text-xs font-mono tracking-widest text-emerald-500 uppercase font-bold">Today&apos;s Tasks</span>
               <div className="h-px flex-1 bg-gradient-to-l from-emerald-500/50 to-transparent" />
             </div>
 
@@ -345,8 +343,8 @@ export function DashboardTab() {
                 { label: 'Done', value: completedToday.length, color: 'text-slate-400' },
               ].map(s => (
                 <div key={s.label} className="rounded-lg border border-slate-700/40 bg-slate-900/40 py-2">
-                  <p className={`text-lg font-bold font-mono ${s.color}`}>{s.value}</p>
-                  <p className="text-[9px] text-slate-600 uppercase tracking-wider">{s.label}</p>
+                  <p className={`text-xl font-bold font-mono ${s.color}`}>{s.value}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--jhq-text3)' }}>{s.label}</p>
                 </div>
               ))}
             </div>
@@ -368,10 +366,10 @@ export function DashboardTab() {
 
             {/* Footer status */}
             <div className="rounded-lg border border-slate-700/40 bg-slate-900/40 px-3 py-2 flex items-center justify-between">
-              <span className="text-[10px] font-mono text-slate-600">STATUS: OPERATIONAL</span>
+              <span className="text-xs font-mono" style={{ color: 'var(--jhq-text3)' }}>STATUS: OPERATIONAL</span>
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span className="text-[10px] font-mono text-slate-500">SECURE CONNECTION</span>
+                <span className="text-xs font-mono" style={{ color: 'var(--jhq-text2)' }}>SECURE CONNECTION</span>
               </div>
             </div>
           </div>

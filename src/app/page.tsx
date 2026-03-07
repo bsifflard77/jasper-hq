@@ -16,9 +16,11 @@ import {
   IdeasTab,
   CostsTab,
   ApiHealthTab,
+  CredentialsTab,
   ChatTab,
   CanvasTab,
 } from '@/components/dashboard/tabs'
+import { JasperChatWidget } from '@/components/JasperChatWidget'
 
 interface DashboardData {
   status: any
@@ -93,6 +95,8 @@ export default function Home() {
         return <CostsTab />
       case 'apis':
         return <ApiHealthTab />
+      case 'credentials':
+        return <CredentialsTab />
       case 'chat':
         return <ChatTab />
       default:
@@ -107,6 +111,7 @@ export default function Home() {
       onTabChange={setActiveTab}
     >
       {renderTabContent()}
+      <JasperChatWidget />
     </DashboardLayout>
   )
 }
