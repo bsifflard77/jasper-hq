@@ -93,8 +93,6 @@ export default function Home() {
         return <IdeasTab ideas={data?.ideas || []} />
       case 'costs':
         return <CostsTab />
-      case 'apis':
-        return <ApiHealthTab />
       case 'vault':
         return <VaultTab />
       case 'chat':

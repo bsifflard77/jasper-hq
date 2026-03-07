@@ -1,6 +1,6 @@
 'use client'
 
-export type TabId = 'dashboard' | 'security' | 'tasks' | 'projects' | 'ai-board' | 'bridge' | 'canvas' | 'costs' | 'apis' | 'vault' | 'marketing' | 'fort' | 'calendar' | 'ideas' | 'chat'
+export type TabId = 'dashboard' | 'security' | 'tasks' | 'projects' | 'ai-board' | 'bridge' | 'canvas' | 'costs' | 'vault' | 'marketing' | 'fort' | 'calendar' | 'ideas' | 'chat'
 
 export interface Tab {
   id: TabId
@@ -10,20 +10,19 @@ export interface Tab {
 
 export const TABS: Tab[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
-  { id: 'chat', label: 'Chat', icon: '🦞' },
-  { id: 'bridge', label: 'Bridge', icon: '🧭' },
-  { id: 'security', label: 'Security', icon: '🛡️' },
-  { id: 'tasks', label: 'Tasks', icon: '📋' },
-  { id: 'calendar', label: 'Calendar', icon: '📅' },
-  { id: 'projects', label: 'Projects', icon: '📁' },
-  { id: 'ai-board', label: 'AI Board', icon: '🏛️' },
-  { id: 'ideas', label: 'Ideas', icon: '💡' },
-  { id: 'canvas', label: 'Canvas', icon: '🧠' },
+  { id: 'chat',      label: 'Chat',      icon: '🦞' },
+  { id: 'bridge',    label: 'Bridge',    icon: '🧭' },
+  { id: 'canvas',    label: 'Canvas',    icon: '🧠' },
+  { id: 'security',  label: 'Security',  icon: '🛡️' },
+  { id: 'tasks',     label: 'Tasks',     icon: '📋' },
+  { id: 'calendar',  label: 'Calendar',  icon: '📅' },
+  { id: 'vault',     label: 'Vault',     icon: '🏦' },
+  { id: 'projects',  label: 'Projects',  icon: '📁' },
+  { id: 'ai-board',  label: 'AI Board',  icon: '🏛️' },
+  { id: 'ideas',     label: 'Ideas',     icon: '💡' },
   { id: 'marketing', label: 'Marketing', icon: '📈' },
-  { id: 'costs', label: 'Costs', icon: '💰' },
-  { id: 'apis', label: 'APIs', icon: '🔌' },
-  { id: 'vault', label: 'Vault', icon: '🏦' },
-  { id: 'fort', label: 'The Fort', icon: '💪' },
+  { id: 'costs',     label: 'Costs',     icon: '💰' },
+  { id: 'fort',      label: 'The Fort',  icon: '💪' },
 ]
 
 interface TabBarProps {
