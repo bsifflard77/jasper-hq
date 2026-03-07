@@ -68,7 +68,7 @@ export default function Home() {
 
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardTab data={data || {}} />
+        return <DashboardTab />
       case 'security':
         return <SecurityTab />
       case 'tasks':
@@ -96,7 +96,7 @@ export default function Home() {
       case 'chat':
         return <ChatTab />
       default:
-        return <DashboardTab data={data || {}} />
+        return <DashboardTab />
     }
   }
 
