@@ -1,7 +1,57 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import dynamic from 'next/dynamic'
+
+type PulseType = 'small' | 'large' | null
+
+// ── Page-wide hourly pulse overlay ────────────────────────────────────────────
+function HourlyPulseOverlay({ active }: { active: boolean }) {
+  if (!active) return null
+  return (
+    <>
+      <style>{`
+        @keyframes hour-wave {
+          0%   { transform: scale(0.3); opacity: 0.55; }
+          60%  { opacity: 0.2; }
+          100% { transform: scale(6); opacity: 0; }
+        }
+        @keyframes hour-flash {
+          0%   { opacity: 0; }
+          8%   { opacity: 0.08; }
+          100% { opacity: 0; }
+        }
+        .hour-wave-ring {
+          position: fixed;
+          inset: 0;
+          margin: auto;
+          width: 280px;
+          height: 280px;
+          border-radius: 50%;
+          border: 2px solid #10b981;
+          pointer-events: none;
+          z-index: 9999;
+        }
+        .hour-flash {
+          position: fixed;
+          inset: 0;
+          background: radial-gradient(ellipse at 50% 45%, rgba(16,185,129,0.18) 0%, transparent 70%);
+          pointer-events: none;
+          z-index: 9998;
+          animation: hour-flash 2.8s ease-out forwards;
+        }
+      `}</style>
+      <div className="hour-flash" />
+      {[0, 0.35, 0.7, 1.1].map((delay, i) => (
+        <div
+          key={i}
+          className="hour-wave-ring"
+          style={{ animation: `hour-wave 2.4s ease-out ${delay}s forwards` }}
+        />
+      ))}
+    </>
+  )
+}
 
 // Three.js orb — client-side only
 const JasperOrb = dynamic(
@@ -107,12 +157,33 @@ export function DashboardTab() {
   const [cronCount, setCronCount] = useState<number | null>(null)
   const [time, setTime] = useState('')
   const [agentStatuses, setAgentStatuses] = useState<{id:string; status:'active'|'queued'|'idle'|'blocked'}[]>([])
+  const [pulseType, setPulseType] = useState<PulseType>(null)
+  const lastPulseRef = useRef('')   // "HH:MM" of last triggered pulse
 
-  // Live clock
-  useEffect(() => {
-    const tick = () => setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }))
-    tick(); const id = setInterval(tick, 1000); return () => clearInterval(id)
+  // Live clock + quarter-hour pulse trigger
+  const triggerPulse = useCallback((type: PulseType) => {
+    setPulseType(type)
+    const duration = type === 'large' ? 3200 : 1800
+    setTimeout(() => setPulseType(null), duration)
   }, [])
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date()
+      setTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }))
+
+      const h = now.getHours()
+      const m = now.getMinutes()
+      const s = now.getSeconds()
+      const key = `${h}:${String(m).padStart(2,'0')}`
+
+      if (s === 0 && (m === 0 || m === 15 || m === 30 || m === 45) && lastPulseRef.current !== key) {
+        lastPulseRef.current = key
+        triggerPulse(m === 0 ? 'large' : 'small')
+      }
+    }
+    tick(); const id = setInterval(tick, 1000); return () => clearInterval(id)
+  }, [triggerPulse])
 
   // Usage data
   useEffect(() => {
@@ -160,6 +231,8 @@ export function DashboardTab() {
 
   return (
     <div className="min-h-screen relative" style={{ background: 'var(--jhq-bg)' }}>
+      {/* Hourly page-wide pulse */}
+      <HourlyPulseOverlay active={pulseType === 'large'} />
 
       <div className="relative z-10 p-6 space-y-6">
 
@@ -236,7 +309,7 @@ export function DashboardTab() {
 
             {/* 3D Orb */}
             <div className="relative">
-              <JasperOrb size={220} agentStatuses={agentStatuses} />
+              <JasperOrb size={220} agentStatuses={agentStatuses} pulseType={pulseType} />
               {/* Orb reflection */}
               <div
                 className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-36 h-4 rounded-full opacity-20"

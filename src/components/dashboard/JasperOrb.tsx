@@ -172,12 +172,55 @@ interface AgentStatus {
   status: 'active' | 'queued' | 'idle' | 'blocked'
 }
 
+type PulseType = 'small' | 'large' | null
+
+// ── Pulse rings emitted from the orb ─────────────────────────────────────────
+function OrbPulseRings({ pulseType }: { pulseType: PulseType }) {
+  if (!pulseType) return null
+
+  const isLarge = pulseType === 'large'
+  const rings = isLarge ? [0, 0.25, 0.5, 0.78] : [0, 0.3]
+  const color = isLarge ? '#10b981' : '#34d399'
+  const maxScale = isLarge ? 5 : 3
+  const dur = isLarge ? 1.8 : 1.2
+
+  return (
+    <>
+      <style>{`
+        @keyframes orb-ring-out {
+          0%   { transform: translate(-50%,-50%) scale(1); opacity: 0.9; }
+          100% { transform: translate(-50%,-50%) scale(${maxScale}); opacity: 0; }
+        }
+      `}</style>
+      {rings.map((delay, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            border: `${isLarge ? 2 : 1.5}px solid ${color}`,
+            boxShadow: isLarge ? `0 0 12px ${color}` : 'none',
+            pointerEvents: 'none',
+            animation: `orb-ring-out ${dur}s ease-out ${delay}s forwards`,
+            zIndex: 20,
+          }}
+        />
+      ))}
+    </>
+  )
+}
+
 interface JasperOrbProps {
   size?: number
   agentStatuses?: AgentStatus[]
+  pulseType?: PulseType
 }
 
-export function JasperOrb({ size = 280, agentStatuses = [] }: JasperOrbProps) {
+export function JasperOrb({ size = 280, agentStatuses = [], pulseType = null }: JasperOrbProps) {
   const containerSize = size + 220 // extra space for orbiting agents
 
   const getStatus = (agentId: string) => {
@@ -196,6 +239,7 @@ export function JasperOrb({ size = 280, agentStatuses = [] }: JasperOrbProps) {
 
       {/* Central Three.js orb */}
       <div style={{ width: size, height: size }} className="relative z-10 flex-shrink-0">
+        <OrbPulseRings pulseType={pulseType} />
         <div
           className="absolute inset-0 rounded-full pointer-events-none"
           style={{
