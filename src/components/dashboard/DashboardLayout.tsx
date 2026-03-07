@@ -4,6 +4,7 @@ import { ReactNode, createContext, useContext } from 'react'
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { TabBar, TabId } from './TabBar'
+import { StatusBar } from './StatusBar'
 
 interface DashboardData {
   status: any
@@ -55,6 +56,7 @@ export function DashboardLayout({
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         {/* Sticky Header + Tab Bar */}
         <div className="sticky top-0 z-50">
+          <StatusBar />
           <header className="border-b border-slate-700/50 bg-slate-800/50 backdrop-blur">
             <div className="container mx-auto px-4 py-4">
               <div className="flex items-center justify-between">
@@ -91,7 +93,7 @@ export function DashboardLayout({
         </div>
 
         {/* Main Content */}
-        <main className="container mx-auto px-4 py-6">
+        <main>
           {children}
         </main>
       </div>
