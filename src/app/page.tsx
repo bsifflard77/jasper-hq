@@ -16,7 +16,7 @@ import {
   IdeasTab,
   CostsTab,
   ApiHealthTab,
-  CredentialsTab,
+  VaultTab,
   ChatTab,
   CanvasTab,
 } from '@/components/dashboard/tabs'
@@ -95,8 +95,8 @@ export default function Home() {
         return <CostsTab />
       case 'apis':
         return <ApiHealthTab />
-      case 'credentials':
-        return <CredentialsTab />
+      case 'vault':
+        return <VaultTab />
       case 'chat':
         return <ChatTab />
       default:
