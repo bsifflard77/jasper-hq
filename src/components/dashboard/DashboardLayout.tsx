@@ -2,19 +2,19 @@
 
 import { ReactNode, createContext, useContext } from 'react'
 import Image from 'next/image'
-import { Badge } from '@/components/ui/badge'
 import { TabBar, TabId } from './TabBar'
 import { StatusBar } from './StatusBar'
+import { useTheme } from '@/contexts/ThemeContext'
 
 interface DashboardData {
-  status: any
-  tasks: any[]
-  activities: any[]
-  documents: any[]
-  projects: any[]
-  calendar: { today: any[], week: any[] }
-  ideas: any[]
-  _meta?: any
+  status: Record<string, unknown>
+  tasks: unknown[]
+  activities: unknown[]
+  documents: unknown[]
+  projects: unknown[]
+  calendar: { today: unknown[]; week: unknown[] }
+  ideas: unknown[]
+  _meta?: unknown
 }
 
 interface DashboardLayoutProps {
@@ -29,70 +29,106 @@ const DashboardContext = createContext<DashboardData | null>(null)
 
 export function useDashboardData() {
   const context = useContext(DashboardContext)
-  if (!context) {
-    throw new Error('useDashboardData must be used within DashboardLayout')
-  }
+  if (!context) throw new Error('useDashboardData must be used within DashboardLayout')
   return context
 }
 
-export function DashboardLayout({ 
-  children, 
-  data, 
+// ── Theme Toggle Button ────────────────────────────────────────────────────────
+function ThemeToggle() {
+  const { isDark, toggle } = useTheme()
+  return (
+    <button
+      onClick={toggle}
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all duration-200"
+      style={{
+        background: 'var(--jhq-surface)',
+        borderColor: 'var(--jhq-border)',
+        color: 'var(--jhq-text2)',
+      }}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {isDark ? (
+        <>☀️ <span className="hidden sm:inline">Light</span></>
+      ) : (
+        <>🌙 <span className="hidden sm:inline">Dark</span></>
+      )}
+    </button>
+  )
+}
+
+export function DashboardLayout({
+  children,
+  data,
   status = 'working',
   activeTab = 'dashboard',
-  onTabChange
+  onTabChange,
 }: DashboardLayoutProps) {
   const statusConfig = {
-    idle: { label: 'Idle', class: 'bg-amber-900/20 text-amber-300 border-amber-500/30' },
-    working: { label: 'Working', class: 'bg-emerald-900/20 text-emerald-300 border-emerald-500/30' },
-    thinking: { label: 'Thinking', class: 'bg-purple-900/20 text-purple-300 border-purple-500/30' }
+    idle:     { label: 'Idle',     dot: '#f59e0b', dotGlow: 'rgba(245,158,11,0.5)' },
+    working:  { label: 'Working',  dot: '#10b981', dotGlow: 'rgba(16,185,129,0.5)' },
+    thinking: { label: 'Thinking', dot: '#a78bfa', dotGlow: 'rgba(167,139,250,0.5)' },
   }
-  
-  const statusKey = (data?.status?.status || status) as keyof typeof statusConfig
-  const currentStatus = statusConfig[statusKey] || statusConfig.working
+  const statusKey = ((data?.status as Record<string,string>)?.status || status) as keyof typeof statusConfig
+  const currentStatus = statusConfig[statusKey] ?? statusConfig.working
 
   return (
     <DashboardContext.Provider value={data || { status: {}, tasks: [], activities: [], documents: [], projects: [], calendar: { today: [], week: [] }, ideas: [] }}>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        {/* Sticky Header + Tab Bar */}
+      <div
+        className="min-h-screen jhq-grid-bg"
+        style={{ background: 'var(--jhq-bg)', color: 'var(--jhq-text)', transition: 'background 0.3s, color 0.3s' }}
+      >
+        {/* ── Sticky chrome: StatusBar + Header + Tabs ── */}
         <div className="sticky top-0 z-50">
+          {/* Monospace status bar */}
           <StatusBar />
-          <header className="border-b border-slate-700/50 bg-slate-800/50 backdrop-blur">
-            <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src="/jasper-avatar.jpg"
-                    alt="Jasper"
-                    width={44}
-                    height={44}
-                    className="rounded-full ring-2 ring-amber-400/60"
+
+          {/* Main header */}
+          <header
+            className="border-b backdrop-blur-md"
+            style={{ background: 'var(--jhq-header-bg)', borderColor: 'var(--jhq-header-bdr)' }}
+          >
+            <div className="px-4 py-3 flex items-center justify-between gap-4">
+              {/* LEFT — brand */}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <Image
+                  src="/agents/jasper-avatar.png"
+                  alt="Jasper"
+                  width={40}
+                  height={40}
+                  className="rounded-full ring-2 shrink-0"
+                  style={{ ringColor: 'var(--jhq-accent)' }}
+                />
+                <div>
+                  <h1 className="text-lg font-bold leading-tight" style={{ color: 'var(--jhq-text)' }}>Jasper HQ</h1>
+                  <p className="text-xs leading-tight" style={{ color: 'var(--jhq-text2)' }}>Command Center</p>
+                </div>
+              </div>
+
+              {/* RIGHT — status + theme toggle */}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {/* Live status badge */}
+                <div
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium"
+                  style={{ background: 'var(--jhq-surface)', borderColor: 'var(--jhq-border)', color: 'var(--jhq-text2)' }}
+                >
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: currentStatus.dot, boxShadow: `0 0 6px ${currentStatus.dotGlow}`, animation: 'pulse 2s ease-in-out infinite' }}
                   />
-                  <div>
-                    <h1 className="text-2xl font-bold text-white">Jasper HQ</h1>
-                    <p className="text-sm text-slate-400">Command Center</p>
-                  </div>
+                  <span style={{ color: 'var(--jhq-text)' }}>{currentStatus.label}</span>
                 </div>
-                
-                <div className="flex items-center gap-4">
-                  <Badge 
-                    variant="outline" 
-                    className={currentStatus.class}
-                  >
-                    Status: {currentStatus.label}
-                  </Badge>
-                </div>
+                <ThemeToggle />
               </div>
             </div>
           </header>
 
-          {/* Tab Bar */}
+          {/* Tab bar */}
           {onTabChange && (
             <TabBar activeTab={activeTab} onTabChange={onTabChange} />
           )}
         </div>
 
-        {/* Main Content */}
+        {/* ── Page content ── */}
         <main>
           {children}
         </main>

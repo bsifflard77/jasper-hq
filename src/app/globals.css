@@ -115,30 +115,104 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ── Jasper HQ Theme Variables ───────────────────────────────────────── */
+:root {
+  --jhq-bg:           #f0f4f8;
+  --jhq-bg2:          #e8edf3;
+  --jhq-surface:      #ffffff;
+  --jhq-surface2:     #f1f5f9;
+  --jhq-border:       #d1d9e0;
+  --jhq-border2:      #e2e8f0;
+  --jhq-text:         #0f172a;
+  --jhq-text2:        #475569;
+  --jhq-text3:        #94a3b8;
+  --jhq-accent:       #059669;
+  --jhq-accent2:      #10b981;
+  --jhq-grid:         rgba(16,185,129,0.08);
+  --jhq-header-bg:    rgba(255,255,255,0.95);
+  --jhq-header-bdr:   #e2e8f0;
+  --jhq-tab-active:   #059669;
+  --jhq-tab-bg:       rgba(255,255,255,0.95);
+  --jhq-status-bg:    #f8fafc;
+  --jhq-status-bdr:   #cbd5e1;
+}
+
+.dark {
+  --jhq-bg:           #060a0e;
+  --jhq-bg2:          #080d12;
+  --jhq-surface:      rgba(10,20,30,0.80);
+  --jhq-surface2:     rgba(15,25,38,0.70);
+  --jhq-border:       rgba(16,185,129,0.18);
+  --jhq-border2:      rgba(100,116,139,0.25);
+  --jhq-text:         #f1f5f9;
+  --jhq-text2:        #94a3b8;
+  --jhq-text3:        #475569;
+  --jhq-accent:       #10b981;
+  --jhq-accent2:      #34d399;
+  --jhq-grid:         rgba(16,185,129,0.04);
+  --jhq-header-bg:    rgba(6,10,14,0.90);
+  --jhq-header-bdr:   rgba(16,185,129,0.15);
+  --jhq-tab-active:   #10b981;
+  --jhq-tab-bg:       rgba(6,10,14,0.95);
+  --jhq-status-bg:    rgba(0,0,0,0.80);
+  --jhq-status-bdr:   rgba(16,185,129,0.20);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  
+
+  html {
+    background: var(--jhq-bg);
+  }
+
   body {
-    @apply bg-background text-foreground;
+    background: var(--jhq-bg);
+    color: var(--jhq-text);
+    transition: background 0.3s ease, color 0.3s ease;
   }
-  
-  /* Custom scrollbar for dark theme */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: rgb(30 41 59 / 0.5);
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: rgb(71 85 105 / 0.5);
-    border-radius: 3px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgb(100 116 139 / 0.5);
-  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--jhq-surface2); }
+  ::-webkit-scrollbar-thumb { background: var(--jhq-border2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--jhq-accent); }
+}
+
+/* ── Global Jasper HQ component styles ──────────────────────────────── */
+.jhq-card {
+  background: var(--jhq-surface);
+  border: 1px solid var(--jhq-border);
+  border-radius: 0.75rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.jhq-surface2 {
+  background: var(--jhq-surface2);
+  border: 1px solid var(--jhq-border2);
+}
+
+.jhq-text    { color: var(--jhq-text); }
+.jhq-text2   { color: var(--jhq-text2); }
+.jhq-text3   { color: var(--jhq-text3); }
+.jhq-accent  { color: var(--jhq-accent); }
+
+/* scanline on dark only */
+.dark .scanline-card::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: -2px;
+  height: 2px;
+  background: var(--jhq-accent2);
+  opacity: 0.06;
+  animation: scanline 4s linear infinite;
+}
+@keyframes scanline { 0%{top:-2px} 100%{top:100%} }
+
+/* grid bg */
+.jhq-grid-bg {
+  background-image: linear-gradient(var(--jhq-grid) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--jhq-grid) 1px, transparent 1px);
+  background-size: 40px 40px;
 }

@@ -67,7 +67,7 @@ export function StatusBar() {
   }
 
   return (
-    <div className="w-full bg-black/80 border-b border-emerald-500/20 backdrop-blur-sm px-4 py-1.5 flex items-center justify-between text-[11px] font-mono" style={{ letterSpacing: '0.05em' }}>
+    <div className="w-full border-b backdrop-blur-sm px-4 py-1.5 flex items-center justify-between text-[11px] font-mono" style={{ letterSpacing: '0.05em', background: 'var(--jhq-status-bg)', borderColor: 'var(--jhq-status-bdr)', color: 'var(--jhq-text2)' }}>
       {/* Left: system status */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1.5">

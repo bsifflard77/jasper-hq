@@ -45,20 +45,18 @@ function ScanLine() {
 }
 
 // ── Metric card ──
+const ACCENT_VALUE: Record<string, string> = {
+  emerald: '#10b981', amber: '#f59e0b', blue: '#3b82f6', red: '#ef4444', slate: 'var(--jhq-text2)',
+}
 function MetricCard({ label, value, sub, accent = 'emerald' }: { label: string; value: string; sub?: string; accent?: string }) {
-  const colors: Record<string, string> = {
-    emerald: 'text-emerald-400 border-emerald-500/20 bg-emerald-900/10',
-    amber: 'text-amber-400 border-amber-500/20 bg-amber-900/10',
-    blue: 'text-blue-400 border-blue-500/20 bg-blue-900/10',
-    red: 'text-red-400 border-red-500/20 bg-red-900/10',
-    slate: 'text-slate-300 border-slate-600/30 bg-slate-800/30',
-  }
+  const accentHex = ACCENT_VALUE[accent] ?? ACCENT_VALUE.emerald
   return (
-    <div className={`relative rounded-lg border p-3 flex flex-col gap-1 overflow-hidden ${colors[accent]}`}>
-      <ScanLine />
-      <span className="text-[10px] font-mono tracking-widest text-slate-500 uppercase">{label}</span>
-      <span className={`text-xl font-bold font-mono ${accent === 'emerald' ? 'text-emerald-300' : accent === 'amber' ? 'text-amber-300' : accent === 'blue' ? 'text-blue-300' : accent === 'red' ? 'text-red-300' : 'text-white'}`}>{value}</span>
-      {sub && <span className="text-[10px] text-slate-500">{sub}</span>}
+    <div
+      className="relative rounded-lg p-3 flex flex-col gap-1 overflow-hidden jhq-card scanline-card"
+    >
+      <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: 'var(--jhq-text3)' }}>{label}</span>
+      <span className="text-xl font-bold font-mono" style={{ color: accentHex }}>{value}</span>
+      {sub && <span className="text-[10px]" style={{ color: 'var(--jhq-text3)' }}>{sub}</span>}
     </div>
   )
 }
@@ -161,18 +159,7 @@ export function DashboardTab() {
   const completedToday = tasks.filter(t => t.status === 'completed')
 
   return (
-    <div
-      className="min-h-screen relative"
-      style={{ background: 'linear-gradient(135deg, #060a0e 0%, #080d12 50%, #060b0f 100%)' }}
-    >
-      {/* Background grid */}
-      <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
-        style={{
-          backgroundImage: 'linear-gradient(#10b981 1px, transparent 1px), linear-gradient(90deg, #10b981 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }}
-      />
+    <div className="min-h-screen relative" style={{ background: 'var(--jhq-bg)' }}>
 
       <div className="relative z-10 p-6 space-y-6">
 

@@ -32,27 +32,45 @@ interface TabBarProps {
 
 export function TabBar({ activeTab, onTabChange }: TabBarProps) {
   return (
-    <div className="border-b border-slate-700/50 bg-slate-800/95 backdrop-blur">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-1">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={`
-                flex items-center gap-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap
-                rounded-t-lg transition-all duration-200
-                ${activeTab === tab.id
-                  ? 'text-white bg-slate-800/50 border-b-2 border-emerald-400'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/30'
-                }
-              `}
-            >
-              <span className="text-base">{tab.icon}</span>
-              <span className="hidden sm:inline">{tab.label}</span>
-            </button>
-          ))}
-        </div>
+    <div
+      className="border-b backdrop-blur-md"
+      style={{ background: 'var(--jhq-tab-bg)', borderColor: 'var(--jhq-header-bdr)' }}
+    >
+      <div className="flex items-center gap-0.5 overflow-x-auto px-3 py-1" style={{ scrollbarWidth: 'none' }}>
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => onTabChange(tab.id)}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium whitespace-nowrap rounded-md transition-all duration-150"
+            style={
+              activeTab === tab.id
+                ? {
+                    color: '#fff',
+                    background: 'var(--jhq-accent)',
+                    boxShadow: '0 0 10px rgba(16,185,129,0.35)',
+                  }
+                : {
+                    color: 'var(--jhq-text2)',
+                    background: 'transparent',
+                  }
+            }
+            onMouseEnter={e => {
+              if (activeTab !== tab.id) {
+                (e.currentTarget as HTMLElement).style.background = 'var(--jhq-surface2)'
+                ;(e.currentTarget as HTMLElement).style.color = 'var(--jhq-text)'
+              }
+            }}
+            onMouseLeave={e => {
+              if (activeTab !== tab.id) {
+                (e.currentTarget as HTMLElement).style.background = 'transparent'
+                ;(e.currentTarget as HTMLElement).style.color = 'var(--jhq-text2)'
+              }
+            }}
+          >
+            <span className="text-sm">{tab.icon}</span>
+            <span className="hidden sm:inline">{tab.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   )
