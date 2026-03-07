@@ -95,8 +95,7 @@ export function DashboardLayout({
                   alt="Jasper"
                   width={40}
                   height={40}
-                  className="rounded-full ring-2 shrink-0"
-                  style={{ ringColor: 'var(--jhq-accent)' }}
+                  className="rounded-full ring-2 ring-emerald-500/60 shrink-0"
                 />
                 <div>
                   <h1 className="text-lg font-bold leading-tight" style={{ color: 'var(--jhq-text)' }}>Jasper HQ</h1>
