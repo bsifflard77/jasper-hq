@@ -108,6 +108,7 @@ export function DashboardTab() {
   const [contextPct, setContextPct] = useState<number | null>(null)
   const [cronCount, setCronCount] = useState<number | null>(null)
   const [time, setTime] = useState('')
+  const [agentStatuses, setAgentStatuses] = useState<{id:string; status:'active'|'queued'|'idle'|'blocked'}[]>([])
 
   // Live clock
   useEffect(() => {
@@ -120,10 +121,27 @@ export function DashboardTab() {
     fetch('/api/dashboard/usage').then(r => r.json()).then(setUsage).catch(() => {})
   }, [])
 
-  // Tasks from Supabase
+  // Tasks + derive agent statuses
   useEffect(() => {
     fetch('/api/tasks/today').then(r => r.json()).then(d => {
-      if (d.tasks) setTasks(d.tasks)
+      if (d.tasks) {
+        setTasks(d.tasks)
+        // Derive per-agent status from tasks
+        const agentMap: Record<string, 'active'|'queued'|'idle'|'blocked'> = {}
+        for (const t of d.tasks as AgentTask[]) {
+          if (!t.agent) continue
+          const cur = agentMap[t.agent]
+          const next = t.status === 'in_progress' ? 'active' : t.status === 'blocked' ? 'blocked' : 'queued'
+          // Higher priority status wins: active > blocked > queued > idle
+          const rank = (s: string) => s==='active'?3:s==='blocked'?2:s==='queued'?1:0
+          if (!cur || rank(next) > rank(cur)) agentMap[t.agent] = next
+        }
+        setAgentStatuses(
+          ['beacon','navigator','rigger','dev','fort'].map(id => ({
+            id, status: agentMap[id] ?? 'idle'
+          }))
+        )
+      }
     }).catch(() => {})
   }, [])
 
@@ -231,7 +249,7 @@ export function DashboardTab() {
 
             {/* 3D Orb */}
             <div className="relative">
-              <JasperOrb size={260} />
+              <JasperOrb size={220} agentStatuses={agentStatuses} />
               {/* Orb reflection */}
               <div
                 className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-36 h-4 rounded-full opacity-20"
